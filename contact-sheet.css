@@ -1,0 +1,275 @@
+/* ─────────────────────────────────────────────────────────
+   contact-sheet.css
+   Analog 35mm contact-sheet look. Lives outside the
+   themed system on purpose — always renders on a dark
+   "darkroom paper" background regardless of category.
+   ───────────────────────────────────────────────────────── */
+
+.cat--contact {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.04), transparent 60%),
+    repeating-linear-gradient(0deg,
+      rgba(255,255,255,.012) 0 1px, transparent 1px 3px),
+    #0a0a0a;
+  color: #ece8df;
+  padding: 140px 64px 160px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.cat--contact .cat-num,
+.cat--contact .cat-blurb,
+.cat--contact .cat-meta {
+  color: #8c8678;
+}
+.cat--contact .cat-title {
+  color: #ece8df;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 500;
+  text-transform: lowercase;
+}
+.cat--contact .cat-meta {
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ── contact sheet container ── */
+.contact-sheet {
+  margin-top: 56px;
+  display: grid;
+  gap: 36px;
+  padding: 36px;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(255,250,225,.04), transparent 80%),
+    #050505;
+  border: 1px solid rgba(255,255,255,.06);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,.6),
+    0 30px 80px rgba(0,0,0,.6);
+}
+
+/* ── one strip ── */
+.cs-strip {
+  display: grid;
+  grid-template-rows: 22px 1fr 22px auto;
+  background: #060606;
+  border: 1px solid rgba(255,255,255,.04);
+  position: relative;
+}
+
+/* sprocket holes — repeating squares */
+.cs-sprocket {
+  display: flex;
+  gap: 14px;
+  justify-content: space-around;
+  align-items: center;
+  background: #ece8df;
+  padding: 0 12px;
+}
+.cs-sprocket i {
+  display: block;
+  width: 22px;
+  height: 11px;
+  background: #060606;
+  border-radius: 2px;
+  flex: 1;
+  max-width: 32px;
+}
+
+/* the frame row */
+.cs-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+  padding: 12px 14px;
+  background: #ece8df;
+  position: relative;
+}
+.cs-row::before, .cs-row::after {
+  /* edge film code — number stamps printed on the rebate */
+  content: "";
+}
+
+/* one frame */
+.cs-frame {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  background: #1a1a1a;
+  border: 0;
+  padding: 4px;
+  cursor: none;
+  transition: transform .25s ease, filter .25s ease;
+  font: inherit;
+  color: inherit;
+}
+.cs-frame:hover {
+  transform: scale(1.03);
+  z-index: 5;
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,.6));
+}
+
+/* the image inside */
+.cs-img {
+  position: absolute;
+  inset: 4px;
+  background-size: cover;
+  background-position: center;
+  background-color: #2a2a2a;
+}
+
+/* frame number — printed on the rebate above */
+.cs-num {
+  position: absolute;
+  top: -16px;
+  left: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  color: #1a1a1a;
+  background: #ece8df;
+  padding: 2px 5px;
+}
+
+/* corner registration marks (only visible on hover) */
+.cs-mark {
+  position: absolute;
+  width: 14px; height: 14px;
+  border: 1px solid rgba(255,255,255,.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+}
+.cs-mark-tl { top: 4px; left: 4px; border-right: 0; border-bottom: 0; }
+.cs-mark-tr { top: 4px; right: 4px; border-left: 0; border-bottom: 0; }
+.cs-mark-bl { bottom: 4px; left: 4px; border-right: 0; border-top: 0; }
+.cs-mark-br { bottom: 4px; right: 4px; border-left: 0; border-top: 0; }
+.cs-frame:hover .cs-mark { opacity: 1; }
+
+/* caption on hover */
+.cs-tag {
+  position: absolute;
+  left: 8px; right: 8px; bottom: 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(0,0,0,.7);
+  padding: 4px 6px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .25s ease, transform .25s ease;
+}
+.cs-frame:hover .cs-tag {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* date stamp at top-right of frame on hover */
+.cs-date {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: rgba(0,0,0,.6);
+  padding: 2px 5px;
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.cs-frame:hover .cs-date { opacity: 1; }
+
+/* grease-pencil annotations — circle ("pick") and X ("reject") */
+.cs-circle, .cs-cross {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: none;
+}
+.cs-frame.cs-pick .cs-circle {
+  display: block;
+  border: 2.5px solid #ffae3a;
+  border-radius: 50%;
+  margin: -4px;
+  /* hand-drawn imperfection */
+  transform: rotate(-3deg);
+  mix-blend-mode: screen;
+  opacity: .85;
+}
+.cs-frame.cs-pick .cs-circle::after {
+  content: "";
+  position: absolute; inset: 0;
+  border: 2.5px solid #ffae3a;
+  border-radius: 50%;
+  transform: rotate(7deg) scale(1.04);
+  opacity: .6;
+}
+.cs-frame.cs-reject .cs-cross {
+  display: block;
+}
+.cs-frame.cs-reject .cs-cross::before,
+.cs-frame.cs-reject .cs-cross::after {
+  content: "";
+  position: absolute;
+  left: 8%; right: 8%; top: 50%;
+  height: 3px;
+  background: #ff3b6b;
+  transform-origin: center;
+  mix-blend-mode: screen;
+  opacity: .85;
+}
+.cs-frame.cs-reject .cs-cross::before { transform: rotate(28deg); }
+.cs-frame.cs-reject .cs-cross::after  { transform: rotate(-28deg); }
+
+/* footer of each strip — film stock label */
+.cs-strip-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 14px;
+  background: #ece8df;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  border-top: 1px solid rgba(0,0,0,.08);
+}
+.cs-strip-arrow { color: #c84a2a; font-weight: 600; }
+
+/* per-category subtle tint on frames */
+.cs-cat-nature   .cs-img { box-shadow: inset 0 0 60px rgba(120,140,80,.08); }
+.cs-cat-holy     .cs-img { box-shadow: inset 0 0 60px rgba(255,140,40,.06); }
+.cs-cat-aviation .cs-img { box-shadow: inset 0 0 60px rgba(125,210,255,.08); }
+.cs-cat-urban    .cs-img { box-shadow: inset 0 0 60px rgba(255,59,107,.06); }
+
+/* footer "approved for print" */
+.contact-foot {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8c8678;
+}
+.cf-stamp {
+  color: #c84a2a;
+  border: 1.5px solid #c84a2a;
+  padding: 8px 14px;
+  letter-spacing: 0.3em;
+  font-size: 11px;
+  transform: rotate(-1.5deg);
+  display: inline-block;
+}
+
+@media (max-width: 900px) {
+  .cat--contact { padding: 80px 24px 100px; }
+  .contact-sheet { padding: 16px; gap: 20px; }
+  .cs-row { grid-template-columns: repeat(3, 1fr); }
+  .cs-sprocket i { max-width: 18px; height: 8px; }
+  .contact-foot { flex-direction: column; gap: 12px; align-items: flex-start; }
+}

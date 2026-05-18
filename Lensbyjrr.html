@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Lensbyjrr | Naturaleza 🌿</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Cormorant+SC:wght@400;500;600&family=UnifrakturCook:wght@700&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Inter+Tight:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="features.css" />
+<link rel="stylesheet" href="contact-sheet.css" />
+<link rel="stylesheet" href="constellation.css" />
+</head>
+<body>
+
+<!-- ─────────────── intro / loading ─────────────── -->
+<div id="intro" class="intro" aria-hidden="false">
+  <div class="intro-counter">
+    <span class="intro-num" id="introNum">00</span>
+    <span class="intro-slash">/</span>
+    <span class="intro-total">05</span>
+  </div>
+  <div class="intro-rows">
+    <div class="intro-row" data-key="nature"><span class="intro-idx">01</span><span class="intro-name tag--nature">Naturaleza</span><span class="intro-bar"><i></i></span></div>
+    <div class="intro-row" data-key="holy"><span class="intro-idx">02</span><span class="intro-name tag--holy">Semana Santa</span><span class="intro-bar"><i></i></span></div>
+    <div class="intro-row" data-key="aviation"><span class="intro-idx">03</span><span class="intro-name tag--aviation">Aviación</span><span class="intro-bar"><i></i></span></div>
+    <div class="intro-row" data-key="urban"><span class="intro-idx">04</span><span class="intro-name tag--urban">Urbano</span><span class="intro-bar"><i></i></span></div>
+  </div>
+  <div class="intro-brand">
+    <span class="brand-mark">◐</span>
+    <span class="brand-name">lensby<em>jrr</em></span>
+  </div>
+  <div class="intro-foot">
+    <span class="intro-msg" id="introMsg">cargando atmósferas</span>
+    <span class="intro-skip" id="introSkip">[ skip ]</span>
+  </div>
+  <div class="intro-curtain"><i></i><i></i></div>
+</div>
+
+<!-- ─────────────── cortina de transición entre categorías ─────────────── -->
+<div id="curtain" class="curtain" aria-hidden="true">
+  <span class="curtain-name"></span>
+</div>
+
+<!-- ─────────────── lightbox ─────────────── -->
+<div id="lightbox" class="lightbox" aria-hidden="true">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar">✕</button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Anterior">‹</button>
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Siguiente">›</button>
+  <div class="lightbox-stage">
+    <div class="lightbox-photo" id="lightboxPhoto">
+      <span class="lightbox-photo-label" id="lightboxLabel">—</span>
+    </div>
+  </div>
+  <aside class="lightbox-meta" id="lightboxMeta">
+    <div class="lb-block">
+      <span class="lb-eyebrow">EXIF</span>
+      <div class="lb-grid">
+        <span>camera</span><b id="lbCam">SONY α7 IV</b>
+        <span>lens</span><b id="lbLens">FE 24-70 GM II</b>
+        <span>focal</span><b id="lbFocal">50mm</b>
+        <span>aperture</span><b id="lbAp">f/2.8</b>
+        <span>shutter</span><b id="lbSh">1/250s</b>
+        <span>iso</span><b id="lbIso">400</b>
+      </div>
+    </div>
+    <div class="lb-block">
+      <span class="lb-eyebrow">GEO</span>
+      <div class="lb-grid">
+        <span>lat</span><b id="lbLat">37.3886° N</b>
+        <span>long</span><b id="lbLng">5.9823° W</b>
+        <span>alt</span><b id="lbAlt">12 m</b>
+        <span>date</span><b id="lbDate">2025·04·17</b>
+        <span>time</span><b id="lbTime">06:12</b>
+      </div>
+    </div>
+    <div class="lb-block lb-block--marcha" id="lbMarchaBlock" style="display:none">
+      <span class="lb-eyebrow">♪ MARCHA</span>
+      <div class="lb-marcha" id="lbMarcha">—</div>
+      <span class="lb-marcha-sub">marcha procesional · banda</span>
+    </div>
+    <div class="lb-counter" id="lbCounter">01 / 06</div>
+  </aside>
+</div>
+
+<!-- ─────────────── canvas para cursor + estelas ─────────────── -->
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<!-- ─────────────── filtro SVG para distorsión líquida ─────────────── -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="liquid" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence id="turb" type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="3" result="noise"/>
+    <feDisplacementMap id="disp" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<!-- ─────────────── shell de navegación ─────────────── -->
+<header class="shell">
+  <a href="#top" class="brand" data-magnet>
+    <span class="brand-mark">◐</span>
+    <span class="brand-name">lensby<em>jrr</em></span>
+  </a>
+
+  <nav class="nav" aria-label="Categorías">
+    <button class="nav-item nav-item--nature is-active" data-theme="nature">Naturaleza</button>
+    <button class="nav-item nav-item--holy" data-theme="holy">Semana&nbsp;Santa</button>
+    <button class="nav-item nav-item--aviation" data-theme="aviation">Aviación</button>
+    <button class="nav-item nav-item--urban" data-theme="urban">Urbano</button>
+  </nav>
+
+  <div class="utility">
+    <div class="audio-viz" id="audioViz" aria-hidden="true">
+      <canvas id="vizCanvas" width="80" height="22"></canvas>
+    </div>
+    <button id="sound-toggle" class="util-btn" aria-pressed="false" title="Sonido ambiental">
+      <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span class="util-label" data-i18n="sound">sonido</span>
+    </button>
+    <button id="intensity-btn" class="util-btn" title="Intensidad de la atmósfera">
+      <span class="intensity-dots"><i></i><i class="on"></i><i></i></span>
+      <span class="util-label" data-i18n="intensity">intensidad</span>
+    </button>
+    <a class="util-btn" href="https://instagram.com/Lensbyjrr" target="_blank" rel="noopener">IG</a>
+    <a class="util-btn" href="https://tiktok.com/@Lensbyjrr" target="_blank" rel="noopener">TT</a>
+  </div>
+</header>
+
+<!-- intensity panel -->
+<div id="intensityPanel" class="int-panel" aria-hidden="true">
+  <span class="int-eyebrow" data-i18n="intensity_title">Intensidad de la atmósfera</span>
+  <div class="int-opts">
+    <button class="int-opt" data-int="subtle">
+      <span class="int-name" data-i18n="int_subtle">Sutil</span>
+      <span class="int-desc" data-i18n="int_subtle_desc">menos partículas, audio bajo</span>
+    </button>
+    <button class="int-opt is-on" data-int="normal">
+      <span class="int-name" data-i18n="int_normal">Normal</span>
+      <span class="int-desc" data-i18n="int_normal_desc">ajuste recomendado</span>
+    </button>
+    <button class="int-opt" data-int="immersive">
+      <span class="int-name" data-i18n="int_immersive">Inmersiva</span>
+      <span class="int-desc" data-i18n="int_immersive_desc">todo al máximo</span>
+    </button>
+  </div>
+</div>
+
+<!-- ─────────────── indicador de categoría activa ─────────────── -->
+<aside class="ticker" aria-hidden="true">
+  <span class="ticker-idx">01 / 04</span>
+  <span class="ticker-dash"></span>
+  <span class="ticker-name tag--nature">Naturaleza</span>
+</aside>
+
+<main id="top">
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero" data-screen-label="01 Hero">
+
+  <!-- animated atmosphere preview behind the title -->
+  <div class="hero-stage" aria-hidden="true">
+    <div class="hero-frame" data-key="nature">
+      <div class="hero-frame-art hero-art--nature" data-src="photos/nature-funicular.jpg"></div>
+      <span class="hero-frame-tag"><i>/ 01 ·</i> <b class="tag--nature">Naturaleza</b></span>
+    </div>
+    <div class="hero-frame" data-key="holy">
+      <div class="hero-frame-art hero-art--holy" data-src="photos/holy-virgen-sunset.jpg"></div>
+      <span class="hero-frame-tag"><i>/ 02 ·</i> <b class="tag--holy">Semana Santa</b></span>
+    </div>
+    <div class="hero-frame" data-key="aviation">
+      <div class="hero-frame-art hero-art--aviation" data-src="photos/aviation-silhouette.jpg"></div>
+      <span class="hero-frame-tag"><i>/ 03 ·</i> <b class="tag--aviation">Aviación</b></span>
+    </div>
+    <div class="hero-frame" data-key="urban">
+      <div class="hero-frame-art hero-art--urban" data-src="photos/urban-fountain.jpg"></div>
+      <span class="hero-frame-tag"><i>/ 04 ·</i> <b class="tag--urban">Urbano</b></span>
+    </div>
+  </div>
+
+  <div class="hero-meta">
+    <span class="meta-dot"></span>
+    <span>Lensbyjrr · Granada / en tránsito</span>
+    <span class="hero-coord">37°10′N · 3°35′W</span>
+    <span class="hero-time" id="heroTime">—</span>
+  </div>
+
+  <h1 class="hero-title" data-reveal>
+    <span class="line"><span class="word">Cinco</span> <span class="word">maneras</span></span>
+    <span class="line"><span class="word">de</span> <span class="word">mirar</span> <em><span class="word">la</span> <span class="word">misma</span></em></span>
+    <span class="line"><span class="word word--accent">luz.</span></span>
+  </h1>
+
+  <div class="hero-bottom">
+    <p class="hero-sub" data-reveal-delay="0.6">
+      <span class="sub-rule"></span>
+      Fotografía y vídeo. Naturaleza, Semana Santa, aviación, ciudad y vuelo. Cada sección cambia de <em>atmósfera</em> —color, tipografía, sonido y cursor— para que veas y escuches lo que estoy viendo cuando disparo.
+    </p>
+
+    <div class="hero-cta" data-reveal-delay="0.9">
+      <span class="cta-hint">desplaza</span>
+      <span class="cta-arrow">↓</span>
+    </div>
+  </div>
+
+  <!-- marquee of the 5 categories -->
+  <div class="hero-marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="m-tag tag--nature">Naturaleza</span><span class="m-sub">7 piezas</span><span class="m-dot">◆</span>
+      <span class="m-tag tag--holy">Semana Santa</span><span class="m-sub">9 piezas</span><span class="m-dot">◆</span>
+      <span class="m-tag tag--aviation">Aviación</span><span class="m-sub">2 piezas</span><span class="m-dot">◆</span>
+      <span class="m-tag tag--urban">Urbano</span><span class="m-sub">13 piezas</span><span class="m-dot">◆</span>
+      <span class="m-tag tag--nature">Naturaleza</span><span class="m-sub">7 piezas</span><span class="m-dot">◆</span>
+      <span class="m-tag tag--holy">Semana Santa</span><span class="m-sub">9 piezas</span><span class="m-dot">◆</span>
+      <span class="m-tag tag--aviation">Aviación</span><span class="m-sub">2 piezas</span><span class="m-dot">◆</span>
+      <span class="m-tag tag--urban">Urbano</span><span class="m-sub">13 piezas</span><span class="m-dot">◆</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ NATURALEZA ═══════════════ -->
+<section class="cat cat--nature" id="nature" data-theme-anchor="nature" data-screen-label="02 Naturaleza">
+  <header class="cat-head">
+    <span class="cat-num">/ 01</span>
+    <h2 class="cat-title">Naturaleza</h2>
+    <p class="cat-blurb">El silencio entre dos cantos. Bosques de pinsapo, marismas al amanecer, y el polvo dorado que solo aparece a contraluz.</p>
+    <div class="cat-meta">
+      <span>7 piezas</span><span>·</span><span>2021 — 2025</span><span>·</span><span>Andalucía, Galicia, Portugal</span>
+    </div>
+  </header>
+
+  <div class="grid grid--nature">
+    <figure class="ph ph--tall" style="--seed:1"
+      data-src="photos/nature-boats.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 24-70 GM II" data-focal="70mm" data-ap="f/5.6" data-sh="1/500s" data-iso="200"
+      data-lat="36.5298° N" data-lng="6.2934° W" data-alt="2 m" data-date="2025·08·15" data-time="21:26"><span class="ph-label">barcas · atardecer</span></figure>
+    <figure class="ph ph--wide" style="--seed:2"
+      data-src="photos/nature-funicular.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 70-200 GM II" data-focal="135mm" data-ap="f/4.0" data-sh="1/250s" data-iso="400"
+      data-lat="41.5536° N" data-lng="8.3779° W" data-alt="298 m" data-date="2025·08·04" data-time="13:51"><span class="ph-label">funicular · bom jesus</span></figure>
+    <figure class="ph" style="--seed:3"
+      data-src="photos/nature-alhambra.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 70-200 GM II" data-focal="135mm" data-ap="f/4.0" data-sh="1/400s" data-iso="200"
+      data-lat="37.1773° N" data-lng="3.5881° W" data-alt="738 m" data-date="2025·06·18" data-time="12:50"><span class="ph-label">alhambra · entre hojas</span></figure>
+    <figure class="ph ph--tall" style="--seed:4"
+      data-src="photos/nature-moon-beach.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 24-70 GM II" data-focal="45mm" data-ap="f/4.0" data-sh="1/60s" data-iso="800"
+      data-lat="36.7339° N" data-lng="3.6883° W" data-alt="3 m" data-date="2025·09·21" data-time="19:28"><span class="ph-label">luna creciente · almuñécar</span></figure>
+    <figure class="ph" style="--seed:5"
+      data-src="photos/nature-alhambra-rama.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 85 GM" data-focal="85mm" data-ap="f/2.8" data-sh="1/250s" data-iso="200"
+      data-lat="37.1781° N" data-lng="3.5893° W" data-alt="745 m" data-date="2025·09·23" data-time="19:27"><span class="ph-label">rama · alhambra al atardecer</span></figure>
+    <figure class="ph ph--wide" style="--seed:6"
+      data-src="photos/nature-sunset-bird.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 70-200 GM II" data-focal="135mm" data-ap="f/4.0" data-sh="1/1000s" data-iso="200"
+      data-lat="42.7853° N" data-lng="9.0892° W" data-alt="62 m" data-date="2021·08·25" data-time="21:19"><span class="ph-label">gaviota · costa atlántica</span></figure>
+    <figure class="ph" style="--seed:7"
+      data-src="photos/nature-moon.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 200-600 G" data-focal="600mm" data-ap="f/6.3" data-sh="1/160s" data-iso="400"
+      data-lat="37.3886° N" data-lng="5.9823° W" data-alt="14 m" data-date="2025·08·10" data-time="00:32"><span class="ph-label">luna llena · agosto</span></figure>
+  </div>
+</section>
+
+<!-- ═══════════════ SEMANA SANTA ═══════════════ -->
+<section class="cat cat--holy" id="holy" data-theme-anchor="holy" data-screen-label="03 Semana Santa">
+  <header class="cat-head">
+    <span class="cat-num">/ 02</span>
+    <h2 class="cat-title cat-title--gothic">Semana Santa</h2>
+    <p class="cat-blurb">La madrugá. Cera caliente sobre el adoquín, el silencio antes de la chicotá, una saeta que se escapa por un balcón. Documento la fe como quien documenta una tormenta: con respeto y sin flash.</p>
+    <div class="cat-meta">
+      <span>8 piezas</span><span>·</span><span>2024 — 2025</span><span>·</span><span>Granada · Sevilla</span>
+    </div>
+  </header>
+
+  <div class="grid grid--holy">
+    <figure class="ph ph--portrait" style="--seed:20"
+      data-src="photos/holy-cristo-alcazaba.jpg"
+      data-cam="iPhone 15 Pro" data-lens="Telephoto 3x" data-focal="77mm" data-ap="f/2.8" data-sh="1/60s" data-iso="1600"
+      data-lat="37.1773° N" data-lng="3.5985° W" data-alt="685 m" data-date="2025·04·17" data-time="22:14"
+      data-marcha="Cristo de la Alcazaba"><span class="ph-label">cristo · catedral granada</span></figure>
+    <figure class="ph ph--portrait" style="--seed:15"
+      data-src="photos/holy-capirote.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 85 GM" data-focal="85mm" data-ap="f/2.0" data-sh="1/200s" data-iso="800"
+      data-lat="37.1773° N" data-lng="3.5985° W" data-alt="685 m" data-date="2025·04·18" data-time="14:02"><span class="ph-label">capirote · viernes santo</span></figure>
+    <figure class="ph ph--portrait" style="--seed:12"
+      data-src="photos/holy-palio-red.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 85 GM" data-focal="85mm" data-ap="f/2.0" data-sh="1/60s" data-iso="6400"
+      data-lat="37.3884° N" data-lng="5.9921° W" data-alt="9 m" data-date="2025·04·17" data-time="02:56"
+      data-marcha="Coronación de la Macarena"><span class="ph-label">palio · macarena</span></figure>
+    <figure class="ph ph--portrait" style="--seed:14"
+      data-src="photos/holy-palio-bw.jpg"
+      data-cam="FUJIFILM X-T5" data-lens="XF 23 f/1.4 R" data-focal="23mm" data-ap="f/1.4" data-sh="1/50s" data-iso="3200"
+      data-lat="37.1772° N" data-lng="3.5994° W" data-alt="685 m" data-date="2024·12·08" data-time="01:22"
+      data-marcha="Fue azotado"><span class="ph-label">palio · medianoche</span></figure>
+    <figure class="ph ph--portrait" style="--seed:11"
+      data-src="photos/holy-candle.jpg"
+      data-cam="FUJIFILM X-T5" data-lens="XF 56 f/1.2 R" data-focal="56mm" data-ap="f/1.2" data-sh="1/125s" data-iso="3200"
+      data-lat="37.1781° N" data-lng="3.5993° W" data-alt="685 m" data-date="2024·12·08" data-time="20:22"><span class="ph-label">cirio · derramado</span></figure>
+    <figure class="ph ph--portrait" style="--seed:17"
+      data-src="photos/holy-nazarenos.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 85 GM" data-focal="85mm" data-ap="f/2.2" data-sh="1/250s" data-iso="640"
+      data-lat="37.1773° N" data-lng="3.5985° W" data-alt="685 m" data-date="2025·04·18" data-time="14:02"><span class="ph-label">silencio · dos miradas</span></figure>
+    <figure class="ph ph--wide" style="--seed:16"
+      data-src="photos/holy-dolorosa.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 70-200 GM II" data-focal="200mm" data-ap="f/2.8" data-sh="1/250s" data-iso="400"
+      data-lat="37.1772° N" data-lng="3.5994° W" data-alt="685 m" data-date="2025·04·18" data-time="14:19"><span class="ph-label">dolorosa · luz cenital</span></figure>
+    <figure class="ph ph--portrait" style="--seed:18"
+      data-src="photos/holy-resucitado.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 16-35 GM II" data-focal="16mm" data-ap="f/8.0" data-sh="1/1000s" data-iso="100"
+      data-lat="37.1773° N" data-lng="3.5995° W" data-alt="685 m" data-date="2025·04·20" data-time="12:14"><span class="ph-label">resucitado · contrasol</span></figure>
+  </div>
+
+  <!-- ── línea de tiempo cofrade ── -->
+  <div class="holy-timeline">
+    <span class="holy-eyebrow">— el calendario de la pasión</span>
+    <h3 class="holy-tl-title">De Ramos a Resurrección</h3>
+    <div class="tl-track">
+      <div class="tl-line"></div>
+      <button class="tl-step" data-day="ramos">
+        <span class="tl-dot"></span>
+        <span class="tl-day tag--holy">Domingo de Ramos</span>
+        <span class="tl-detail">La Borriquita · La Paz · Amargura</span>
+      </button>
+      <button class="tl-step" data-day="lunes">
+        <span class="tl-dot"></span>
+        <span class="tl-day tag--holy">Lunes</span>
+        <span class="tl-detail">Santa Genoveva · El Polvorilla</span>
+      </button>
+      <button class="tl-step" data-day="martes">
+        <span class="tl-dot"></span>
+        <span class="tl-day tag--holy">Martes</span>
+        <span class="tl-detail">El Cerro · Los Estudiantes</span>
+      </button>
+      <button class="tl-step" data-day="miercoles">
+        <span class="tl-dot"></span>
+        <span class="tl-day tag--holy">Miércoles</span>
+        <span class="tl-detail">El Carmen · Buen Fin</span>
+      </button>
+      <button class="tl-step is-on" data-day="madruga">
+        <span class="tl-dot"></span>
+        <span class="tl-day tag--holy">Madrugá</span>
+        <span class="tl-detail">El Silencio · Macarena · Esperanza</span>
+      </button>
+      <button class="tl-step" data-day="viernes">
+        <span class="tl-dot"></span>
+        <span class="tl-day tag--holy">Viernes Santo</span>
+        <span class="tl-detail">La Carretería · Soledad</span>
+      </button>
+      <button class="tl-step" data-day="sabado">
+        <span class="tl-dot"></span>
+        <span class="tl-day tag--holy">Sábado</span>
+        <span class="tl-detail">Santo Entierro</span>
+      </button>
+      <button class="tl-step" data-day="resurreccion">
+        <span class="tl-dot"></span>
+        <span class="tl-day tag--holy">Resurrección</span>
+        <span class="tl-detail">El Resucitado</span>
+      </button>
+    </div>
+    <div class="tl-card">
+      <span class="tl-card-eye">02:14 h · Sevilla</span>
+      <p class="tl-card-text" id="tlText">Silencio absoluto al doblar Sierpes. El paso de palio se inclina, los varales rozan los aleros y la Esperanza, a la luz de cien velas, parece que respira. Apago el flash. Sólo queda mirar.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ AVIACIÓN ═══════════════ -->
+<section class="cat cat--aviation" id="aviation" data-theme-anchor="aviation" data-screen-label="04 Aviación">
+  <header class="cat-head">
+    <span class="cat-num">/ 03</span>
+    <h2 class="cat-title cat-title--tech">Aviación</h2>
+    <p class="cat-blurb">Spotting, despegues con teleobjetivo a 600mm, cabinas, mecánica y aproximaciones imposibles. El metal cuando muerde el aire.</p>
+    <div class="cat-meta">
+      <span>2 piezas</span><span>·</span><span>LEGR · LEMG</span><span>·</span><span>↑ aproximaciones</span>
+    </div>
+  </header>
+
+  <div class="grid grid--aviation">
+    <figure class="ph ph--wide" style="--seed:22"
+      data-src="photos/aviation-vueling.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 200-600 G" data-focal="600mm" data-ap="f/6.3" data-sh="1/800s" data-iso="400"
+      data-lat="37.1869° N" data-lng="3.7775° W" data-alt="567 m" data-date="2025·05·14" data-time="19:42"><span class="ph-label">A320 vueling · aproximación granada</span></figure>
+    <figure class="ph ph--wide" style="--seed:23"
+      data-src="photos/aviation-iberia-crj.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 200-600 G" data-focal="600mm" data-ap="f/6.3" data-sh="1/1250s" data-iso="200"
+      data-lat="37.1869° N" data-lng="3.7775° W" data-alt="567 m" data-date="2025·06·02" data-time="20:18"><span class="ph-label">CRJ iberia regional · cruise</span></figure>
+  </div>
+
+  <!-- ── nota sobre nuevas piezas ── -->
+  <div class="cat-note">
+    <span class="cn-eye">— spotting agenda</span>
+    <p>Cabinas, despegues largos con teleobjetivo y aproximaciones a LEGR (Granada) y LEMG (Málaga). Spotting desde la valla de Chauchina, sábados con luz baja.</p>
+  </div>
+
+  <div class="aviation-data">
+    <div class="data-row"><span>callsign</span><b>IBE3162</b></div>
+    <div class="data-row"><span>aircraft</span><b>A320-251N</b></div>
+    <div class="data-row"><span>altitude</span><b>FL360</b></div>
+    <div class="data-row"><span>heading</span><b>273°</b></div>
+  </div>
+
+  <!-- ── mapa de rutas ── -->
+  <div class="route-map">
+    <header class="route-head">
+      <span class="holy-eyebrow">— rutas documentadas · 2024-26</span>
+      <h3 class="route-title">12 destinos · 47 vuelos · 600mm</h3>
+    </header>
+
+    <svg class="route-svg" viewBox="0 0 1000 460" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <defs>
+        <radialGradient id="rgrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(125,210,255,0.8)"/>
+          <stop offset="100%" stop-color="rgba(125,210,255,0)"/>
+        </radialGradient>
+      </defs>
+      <!-- Iberian peninsula schematic + Europe outline (very abstract) -->
+      <g class="route-grid">
+        <path d="M0,80 L1000,80 M0,160 L1000,160 M0,240 L1000,240 M0,320 L1000,320 M0,400 L1000,400" stroke="currentColor" stroke-width="0.5" opacity="0.15"/>
+        <path d="M100,0 L100,460 M250,0 L250,460 M400,0 L400,460 M550,0 L550,460 M700,0 L700,460 M850,0 L850,460" stroke="currentColor" stroke-width="0.5" opacity="0.15"/>
+      </g>
+      <!-- schematic peninsula -->
+      <path class="route-land" d="M180,240 Q220,200 290,205 Q360,200 410,225 Q470,240 500,275 Q510,320 470,340 Q400,360 320,355 Q250,350 210,330 Q175,300 180,240 Z" fill="none" stroke="currentColor" stroke-width="1" opacity="0.35"/>
+      <!-- routes -->
+      <path class="route-arc" d="M280,310 Q380,180 580,140" stroke="#7dd2ff" stroke-width="1.4" fill="none" stroke-dasharray="4 4"/>
+      <path class="route-arc" d="M280,310 Q400,260 620,280" stroke="#7dd2ff" stroke-width="1.4" fill="none" stroke-dasharray="4 4"/>
+      <path class="route-arc" d="M280,310 Q220,260 240,200" stroke="#7dd2ff" stroke-width="1.4" fill="none" stroke-dasharray="4 4"/>
+      <path class="route-arc" d="M280,310 Q140,330 90,310" stroke="#7dd2ff" stroke-width="1.4" fill="none" stroke-dasharray="4 4"/>
+      <path class="route-arc" d="M280,310 Q450,360 720,340" stroke="#7dd2ff" stroke-width="1.4" fill="none" stroke-dasharray="4 4"/>
+      <path class="route-arc" d="M280,310 Q500,420 820,400" stroke="#7dd2ff" stroke-width="1.4" fill="none" stroke-dasharray="4 4"/>
+      <!-- nodes -->
+      <g class="route-nodes" font-family="Space Grotesk, sans-serif" font-size="11" letter-spacing="0.12em">
+        <g class="rn rn--origin"><circle r="10" cx="280" cy="310" fill="url(#rgrad)"/><circle r="3" cx="280" cy="310" fill="#7dd2ff"/><text x="296" y="314" fill="currentColor">SVQ</text></g>
+        <g class="rn"><circle r="6" cx="240" cy="200" fill="url(#rgrad)"/><circle r="2" cx="240" cy="200" fill="#7dd2ff"/><text x="252" y="204" fill="currentColor">LIS</text></g>
+        <g class="rn"><circle r="6" cx="90" cy="310" fill="url(#rgrad)"/><circle r="2" cx="90" cy="310" fill="#7dd2ff"/><text x="102" y="314" fill="currentColor">LCV</text></g>
+        <g class="rn"><circle r="6" cx="380" cy="240" fill="url(#rgrad)"/><circle r="2" cx="380" cy="240" fill="#7dd2ff"/><text x="392" y="244" fill="currentColor">MAD</text></g>
+        <g class="rn"><circle r="6" cx="580" cy="140" fill="url(#rgrad)"/><circle r="2" cx="580" cy="140" fill="#7dd2ff"/><text x="592" y="144" fill="currentColor">CDG</text></g>
+        <g class="rn"><circle r="6" cx="620" cy="280" fill="url(#rgrad)"/><circle r="2" cx="620" cy="280" fill="#7dd2ff"/><text x="632" y="284" fill="currentColor">FCO</text></g>
+        <g class="rn"><circle r="6" cx="720" cy="340" fill="url(#rgrad)"/><circle r="2" cx="720" cy="340" fill="#7dd2ff"/><text x="732" y="344" fill="currentColor">ATH</text></g>
+        <g class="rn"><circle r="6" cx="820" cy="400" fill="url(#rgrad)"/><circle r="2" cx="820" cy="400" fill="#7dd2ff"/><text x="832" y="404" fill="currentColor">RUH</text></g>
+      </g>
+      <!-- moving plane -->
+      <g class="route-plane">
+        <circle r="3" fill="#fff"/>
+        <circle r="8" fill="none" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      </g>
+    </svg>
+
+    <div class="route-legend">
+      <span><b>●</b> SVQ <em>home base</em></span>
+      <span>—— ruta documentada</span>
+      <span class="route-live">▮ tráfico actual: 4.218 aeronaves</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ URBANO ═══════════════ -->
+<section class="cat cat--urban" id="urban" data-theme-anchor="urban" data-screen-label="05 Urbano">
+  <header class="cat-head">
+    <span class="cat-num">/ 04</span>
+    <h2 class="cat-title cat-title--mono">Urbano</h2>
+    <p class="cat-blurb">[ city after dark ] · larga exposición, neones reventados, vapor saliendo del asfalto y el reflejo de un semáforo en un charco. Sevilla, Madrid, Lisboa, Tokio.</p>
+    <div class="cat-meta">
+      <span>13 piezas</span><span>·</span><span>ISO 100 — 6400</span><span>·</span><span>night.archive//</span>
+    </div>
+  </header>
+
+  <div class="grid grid--urban">
+    <figure class="ph ph--wide" style="--seed:31"
+      data-src="photos/urban-braga.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 16-35 GM II" data-focal="16mm" data-ap="f/4.0" data-sh="1/60s" data-iso="400"
+      data-lat="41.5503° N" data-lng="8.4203° W" data-alt="200 m" data-date="2025·08·03" data-time="21:47"><span class="ph-label">// braga_arcada.raw</span></figure>
+    <figure class="ph" style="--seed:32"
+      data-src="photos/urban-fountain.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 24-70 GM II" data-focal="35mm" data-ap="f/5.6" data-sh="2.5s" data-iso="100"
+      data-lat="37.3776° N" data-lng="5.9885° W" data-alt="9 m" data-date="2025·03·11" data-time="19:42"><span class="ph-label">// fuente_neptuno.raw</span></figure>
+    <figure class="ph" style="--seed:33"
+      data-src="photos/urban-alfa.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 70-200 GM II" data-focal="135mm" data-ap="f/2.8" data-sh="1/200s" data-iso="800"
+      data-lat="40.4258° N" data-lng="3.6915° W" data-alt="667 m" data-date="2026·05·18" data-time="16:09"><span class="ph-label">// alfa_pharmacy.raw</span></figure>
+    <figure class="ph ph--tall" style="--seed:34"
+      data-src="photos/urban-ristorante.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 35 GM" data-focal="35mm" data-ap="f/2.0" data-sh="1/250s" data-iso="1600"
+      data-lat="40.4198° N" data-lng="3.7032° W" data-alt="660 m" data-date="2025·09·20" data-time="20:59"><span class="ph-label">// ristorante_neon.raw</span></figure>
+    <figure class="ph ph--wide" style="--seed:35"
+      data-src="photos/urban-streetlamp.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 16-35 GM II" data-focal="16mm" data-ap="f/2.8" data-sh="1/20s" data-iso="3200"
+      data-lat="41.5503° N" data-lng="8.4203° W" data-alt="200 m" data-date="2025·08·03" data-time="23:38"><span class="ph-label">// braga_24.raw</span></figure>
+    <figure class="ph" style="--seed:36"
+      data-src="photos/urban-futurotel.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 85 GM" data-focal="85mm" data-ap="f/2.0" data-sh="1/250s" data-iso="1600"
+      data-lat="40.4172° N" data-lng="3.7092° W" data-alt="660 m" data-date="2025·07·28" data-time="22:27"><span class="ph-label">// futurotel.raw</span></figure>
+    <figure class="ph" style="--seed:37"
+      data-src="photos/urban-mcdonalds.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 24-70 GM II" data-focal="35mm" data-ap="f/2.8" data-sh="1/60s" data-iso="3200"
+      data-lat="69.6492° N" data-lng="18.9553° E" data-alt="14 m" data-date="2025·08·19" data-time="22:37"><span class="ph-label">// kaffe_til_maten.raw</span></figure>
+    <figure class="ph" style="--seed:38"
+      data-src="photos/urban-balcon.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 85 GM" data-focal="85mm" data-ap="f/2.0" data-sh="1/100s" data-iso="3200"
+      data-lat="37.3923° N" data-lng="5.9892° W" data-alt="14 m" data-date="2025·07·20" data-time="21:57"><span class="ph-label">// balcon_06.raw</span></figure>
+    <figure class="ph ph--tall" style="--seed:39"
+      data-src="photos/urban-zoco.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 70-200 GM II" data-focal="135mm" data-ap="f/2.8" data-sh="1/200s" data-iso="1600"
+      data-lat="35.7895° N" data-lng="5.8138° W" data-alt="22 m" data-date="2025·04·19" data-time="18:42"><span class="ph-label">// zoco_chaouen.raw</span></figure>
+    <figure class="ph" style="--seed:40"
+      data-src="photos/urban-pintor.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 70-200 GM II" data-focal="120mm" data-ap="f/4.0" data-sh="1/200s" data-iso="200"
+      data-lat="37.1773° N" data-lng="3.5881° W" data-alt="738 m" data-date="2025·06·19" data-time="12:06"><span class="ph-label">// pintor_albaicín.raw</span></figure>
+    <figure class="ph" style="--seed:41"
+      data-src="photos/urban-tromso.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 16-35 GM II" data-focal="20mm" data-ap="f/2.8" data-sh="1/40s" data-iso="1600"
+      data-lat="69.6492° N" data-lng="18.9553° E" data-alt="9 m" data-date="2025·08·19" data-time="22:37"><span class="ph-label">// tromsø_kirke.raw</span></figure>
+    <figure class="ph ph--wide" style="--seed:42"
+      data-src="photos/urban-cupula.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 70-200 GM II" data-focal="135mm" data-ap="f/4.0" data-sh="1/60s" data-iso="3200"
+      data-lat="37.3884° N" data-lng="5.9921° W" data-alt="22 m" data-date="2025·07·20" data-time="21:57"><span class="ph-label">// estatua_cupula.raw</span></figure>
+    <figure class="ph" style="--seed:43"
+      data-src="photos/urban-pierrot.jpg"
+      data-cam="SONY α7 IV" data-lens="FE 85 GM" data-focal="85mm" data-ap="f/2.0" data-sh="1/250s" data-iso="800"
+      data-lat="36.5300° N" data-lng="6.2926° W" data-alt="3 m" data-date="2025·02·11" data-time="14:22"><span class="ph-label">// pierrot_carnaval.raw</span></figure>
+  </div>
+</section>
+
+<!-- ═══════════════ CONSTELACIÓN ═══════════════ -->
+<section class="constellation" id="constellation" data-screen-label="06 Constelación">
+  <header class="cnst-head">
+    <span class="cnst-eye">— mapa íntimo</span>
+    <h2 class="cnst-title">Constelación de un año</h2>
+    <p class="cnst-blurb">Cada foto es una estrella, colocada donde la disparé. Granada al sur, Braga al oeste, Tánger al filo del estrecho. Pasa el cursor sobre cualquier estrella.</p>
+  </header>
+  <div class="cnst-stage">
+    <svg id="cnstSvg" class="cnst-svg" viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <defs>
+        <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.95)"/>
+          <stop offset="40%" stop-color="rgba(255,220,180,0.45)"/>
+          <stop offset="100%" stop-color="rgba(255,220,180,0)"/>
+        </radialGradient>
+        <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(120,140,180,0.06)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+        </radialGradient>
+      </defs>
+      <!-- backdrop -->
+      <rect width="1200" height="620" fill="url(#bgGlow)"/>
+      <!-- tiny background stars (decorative) -->
+      <g id="cnstBg"></g>
+      <!-- great circles connecting clusters -->
+      <g id="cnstLines" stroke="rgba(255,255,255,0.08)" stroke-width="0.6" fill="none"></g>
+      <!-- city labels -->
+      <g id="cnstLabels"></g>
+      <!-- photo stars -->
+      <g id="cnstStars"></g>
+    </svg>
+    <div class="cnst-tooltip" id="cnstTip" aria-hidden="true">
+      <div class="cnst-tip-thumb" id="cnstTipThumb"></div>
+      <div class="cnst-tip-body">
+        <span class="cnst-tip-loc" id="cnstTipLoc">—</span>
+        <span class="cnst-tip-cap" id="cnstTipCap">—</span>
+        <span class="cnst-tip-date" id="cnstTipDate">—</span>
+      </div>
+    </div>
+  </div>
+  <div class="cnst-foot">
+    <span><b id="cnstCount">—</b> estrellas · <b id="cnstMin">—</b>°N a <b id="cnstMax">—</b>°N</span>
+    <span class="cnst-hint">pulsa cualquier estrella para abrir la foto</span>
+  </div>
+</section>
+
+<!-- ═══════════════ HOJA DE CONTACTOS ═══════════════ -->
+<section class="cat cat--contact" id="contactos" data-screen-label="06 Hoja de Contactos">
+  <header class="cat-head">
+    <span class="cat-num">/ 05</span>
+    <h2 class="cat-title cat-title--mono">Hoja&nbsp;de contactos</h2>
+    <p class="cat-blurb">Negativo · 35mm · todas las piezas del año en una sola tira. Pulsa cualquier fotograma para verlo en grande.</p>
+    <div class="cat-meta">
+      <span>31 fotogramas</span><span>·</span><span>4 categorías</span><span>·</span><span>kodak portra 400 · ilford hp5</span>
+    </div>
+  </header>
+
+  <div class="contact-sheet" id="contactSheet">
+    <!-- frames are auto-built by contact-sheet.js from the page's .ph data -->
+  </div>
+
+  <div class="contact-foot">
+    <span class="cf-stamp">★ APPROVED FOR PRINT</span>
+    <span class="cf-meta">JRR · 2024–2026 · LENSBYJRR.com</span>
+  </div>
+</section>
+
+<!-- ═══════════════ SOBRE MÍ ═══════════════ -->
+<section class="about" id="about" data-screen-label="07 Sobre mí">
+  <div class="about-photo">
+    <div class="about-photo-inner" id="liquidTarget" data-src="photos/about-jrr.jpg">
+      <span class="ph-label">retrato · autor</span>
+    </div>
+    <span class="about-photo-cap">jrr · albaicín, granada · 2025</span>
+  </div>
+
+  <div class="about-copy">
+    <span class="about-eyebrow">— sobre mí</span>
+    <p class="about-text" id="aboutText">Soy JRR. Granaíno, con una cámara desde los catorce años y nunca aprendí a soltarla. La Alhambra al alba, una marcha procesional bajando por Reyes Católicos, una marisma a las seis de la mañana, un 787 mordiendo la pista, un charco con neones encima — disparo lo que me deja sin aliento. Esta web está pensada como una cámara: cuatro lentes, una sola luz.</p>
+  </div>
+</section>
+
+<!-- ═══════════════ CONTACTO ═══════════════ -->
+<section class="contact" id="contact" data-screen-label="08 Contacto">
+  <span class="about-eyebrow">— hablemos</span>
+  <h2 class="contact-title">¿Tienes una historia que quieres ver con luz?</h2>
+
+  <form class="form" onsubmit="event.preventDefault(); this.classList.add('is-sent');">
+    <label class="field">
+      <span>nombre</span>
+      <input type="text" required autocomplete="name" />
+    </label>
+    <label class="field">
+      <span>email</span>
+      <input type="email" required autocomplete="email" />
+    </label>
+    <label class="field field--full">
+      <span>cuéntame</span>
+      <textarea rows="4" required></textarea>
+    </label>
+    <label class="field field--inline">
+      <span>tipo</span>
+      <select>
+        <option>Boda / evento</option>
+        <option>Marca / comercial</option>
+        <option>Aéreo / dron</option>
+        <option>Otro</option>
+      </select>
+    </label>
+
+    <button type="submit" class="send" data-magnet>
+      <span class="send-label">enviar</span>
+      <span class="send-arrow">→</span>
+    </button>
+  </form>
+
+  <footer class="foot">
+    <span>© 2026 Lensbyjrr</span>
+    <span>·</span>
+    <a href="https://instagram.com/Lensbyjrr" target="_blank" rel="noopener">@Lensbyjrr · IG</a>
+    <span>·</span>
+    <a href="https://tiktok.com/@Lensbyjrr" target="_blank" rel="noopener">@Lensbyjrr · TT</a>
+    <span>·</span>
+    <span>hola@lensbyjrr.com</span>
+  </footer>
+</section>
+
+</main>
+
+<!-- ─────────────── easter egg · modo carrete ─────────────── -->
+<div id="rollMode" class="roll" aria-hidden="true">
+  <div class="roll-strip" id="rollStrip">
+    <!-- frames injected by JS -->
+  </div>
+  <div class="roll-info">
+    <span class="roll-frame-no" id="rollNo">01 / 05</span>
+    <span class="roll-name" id="rollName">Naturaleza · 06:42</span>
+    <span class="roll-hint">[esc] salir · ←→ navegar</span>
+  </div>
+  <div class="roll-shutter" id="rollShutter"></div>
+</div>
+
+<script src="image-slot.js"></script>
+<script src="themes.js"></script>
+<script src="cursor.js"></script>
+<script src="audio.js"></script>
+<script src="interactions.js"></script>
+<script src="features.js"></script>
+<script src="modules.js"></script>
+<script src="contact-sheet.js"></script>
+<script src="constellation.js"></script>
+<script src="uploader.js"></script>
+
+</body>
+</html>

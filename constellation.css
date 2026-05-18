@@ -1,0 +1,163 @@
+/* ─────────────────────────────────────────────────────────
+   constellation.css  ·  starfield section
+   ───────────────────────────────────────────────────────── */
+
+.constellation {
+  padding: 140px 64px 120px;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(40,55,90,.18), transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(120,40,80,.10), transparent 60%),
+    #050608;
+  color: #e8e6df;
+  border-top: 1px solid rgba(255,255,255,.06);
+  position: relative;
+  overflow: hidden;
+}
+.cnst-head {
+  display: grid;
+  grid-template-columns: 200px 1fr 1fr;
+  gap: 40px;
+  align-items: end;
+  margin-bottom: 56px;
+}
+.cnst-eye {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: #8c8678;
+  align-self: start;
+  padding-top: 14px;
+}
+.cnst-title {
+  grid-column: 2;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(48px, 6.5vw, 96px);
+  line-height: 0.96;
+  letter-spacing: -0.015em;
+  color: #f5f1e6;
+}
+.cnst-blurb {
+  grid-column: 3;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #9c9485;
+  max-width: 380px;
+  text-wrap: pretty;
+}
+
+.cnst-stage {
+  position: relative;
+  border: 1px solid rgba(255,255,255,.07);
+  background: #02030500;
+}
+.cnst-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* lines connecting same-category photos */
+.cnst-link              { stroke: rgba(255,255,255,.08); }
+.cnst-link--nature      { stroke: rgba(216, 192, 138, .18); }
+.cnst-link--holy        { stroke: rgba(255, 174,  58, .20); }
+.cnst-link--aviation    { stroke: rgba(125, 210, 255, .22); }
+.cnst-link--urban       { stroke: rgba(255, 107, 138, .18); }
+
+/* the star itself */
+.cnst-star {
+  cursor: none;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.cnst-star .cnst-star-core {
+  transition: r .25s ease;
+}
+.cnst-star .cnst-star-glow {
+  opacity: 0.5;
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: twinkle var(--td, 4s) ease-in-out infinite;
+  animation-delay: calc(var(--ph, 0) * -1s);
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.35; transform: scale(0.9); }
+  50%      { opacity: 0.7;  transform: scale(1.1); }
+}
+.cnst-star:hover .cnst-star-core { r: 4.2; }
+.cnst-star:hover .cnst-star-glow {
+  opacity: 1;
+  animation: none;
+  transform: scale(1.6);
+  transition: transform .25s ease, opacity .25s ease;
+}
+
+/* tooltip */
+.cnst-tooltip {
+  position: absolute;
+  top: 0; left: 0;
+  transform: translate(-50%, calc(-100% - 18px));
+  width: 240px;
+  background: rgba(8,10,14,.92);
+  border: 1px solid rgba(255,255,255,.10);
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s ease;
+  z-index: 5;
+  backdrop-filter: blur(8px);
+}
+.cnst-tooltip.is-on { opacity: 1; }
+.cnst-tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 10px; height: 10px;
+  background: rgba(8,10,14,.92);
+  border-right: 1px solid rgba(255,255,255,.10);
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+.cnst-tip-thumb {
+  width: 80px; height: 80px;
+  background-size: cover;
+  background-position: center;
+  background-color: #1a1a1a;
+}
+.cnst-tip-body {
+  display: flex; flex-direction: column; gap: 4px; justify-content: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #c9c4b5;
+}
+.cnst-tip-loc { color: #ffae3a; letter-spacing: 0.16em; font-size: 9.5px; }
+.cnst-tip-cap { color: #fff; font-size: 11.5px; letter-spacing: 0.04em; text-transform: none; }
+.cnst-tip-date { color: #6b6555; font-size: 9.5px; letter-spacing: 0.14em; }
+
+.cnst-foot {
+  margin-top: 28px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8c8678;
+}
+.cnst-foot b { color: #ffae3a; font-weight: 500; }
+.cnst-hint { opacity: .7; }
+
+@media (max-width: 900px) {
+  .constellation { padding: 80px 24px; }
+  .cnst-head { grid-template-columns: 1fr; gap: 14px; }
+  .cnst-title, .cnst-blurb { grid-column: 1; }
+  .cnst-foot { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .cnst-tooltip { width: 200px; grid-template-columns: 60px 1fr; }
+  .cnst-tip-thumb { width: 60px; height: 60px; }
+}
